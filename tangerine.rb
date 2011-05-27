@@ -1,3 +1,5 @@
+require "pp"
+
 def play arg
   $board = parse_board arg
   row, column = choose_move
@@ -11,16 +13,32 @@ def choose_move
 end
 
 def find_half_killed_ships
+  hits = find_chars "X"
+  hits.each do |hit|
+    left_neighbour_coords = [hit[0] - 1, hit[1]]
+    left_neighbour = content_of left_neighbour_coords
+    return left_neighbour_coords if left_neighbour == "-"
+  end
+  nil
 end
 
+def content_of coords
+  return nil if coords.any? {|c| c < 0 || c > 8 }
+  $board[coords[1]][coords[0]]
+end
 def random_fire
-  find_char "-"
+  blanks = find_chars("-")
+  blanks[rand(blanks.size)]
 end
 
-def find_char char
-  row = $board.find_index {|row| row.include?(char) } or return nil
-  column = $board[row].find_index(char) or return nil
-  [row, column]
+def find_chars char
+  positions = []
+  $board.each_with_index do |row, y|
+    row.each_with_index do |content, x|
+      positions << [x, y] if content == char
+    end
+  end
+  positions.empty? ? nil : positions
 end
 
 def parse_board str
