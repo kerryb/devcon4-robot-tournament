@@ -15,9 +15,11 @@ end
 def find_half_killed_ships
   hits = find_chars "X"
   hits.each do |hit|
-    left_neighbour_coords = [hit[0] - 1, hit[1]]
-    left_neighbour = content_of left_neighbour_coords
-    return left_neighbour_coords if left_neighbour == "-"
+    [[-1, 0], [1, 0], [0, -1], [0, 1]].each do |dx, dy|
+      neighbour_coords = [hit[0] + dx, hit[1] + dy]
+      neighbour = content_of neighbour_coords
+      return neighbour_coords if neighbour == "-"
+    end
   end
   nil
 end
