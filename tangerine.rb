@@ -2,7 +2,7 @@ require "pp"
 
 def play arg
   $board = parse_board arg
-  row, column = choose_move
+  column, row = choose_move
   x = %w{A B C D E F G H I}[column]
   y = row + 1
   puts "#{x}#{y}"
@@ -13,7 +13,7 @@ def choose_move
 end
 
 def find_half_killed_ships
-  hits = find_chars "X"
+  hits = find_chars("X") or return nil
   hits.each do |hit|
     [[-1, 0], [1, 0], [0, -1], [0, 1]].each do |dx, dy|
       neighbour_coords = [hit[0] + dx, hit[1] + dy]
@@ -28,6 +28,7 @@ def content_of coords
   return nil if coords.any? {|c| c < 0 || c > 8 }
   $board[coords[1]][coords[0]]
 end
+
 def random_fire
   blanks = find_chars("-")
   blanks[rand(blanks.size)]
